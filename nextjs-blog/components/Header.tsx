@@ -14,12 +14,12 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      <div className="container">
+      <div className="max-w-5xl mx-auto px-4">
         <div className={styles.content}>
           {/* Logo */}
           <Link href="/" className={styles.logo}>
             <span className={styles.logoIcon}>🔗</span>
-            <span className={styles.logoText}>yangyu‘s blog</span>
+            <span className={styles.logoText}>yangyu's blog</span>
           </Link>
 
           {/* Navigation */}
@@ -46,7 +46,7 @@ export default function Header() {
               title="GitHub"
             >
               <svg
-                className={styles.icon}
+                className="w-5 h-5 text-secondary hover:text-primary transition-colors"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -60,16 +60,20 @@ export default function Header() {
               title="Twitter"
             >
               <svg
-                className={styles.icon}
+                className="w-5 h-5 text-secondary hover:text-primary transition-colors"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
                 <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7a10.6 10.6 0 01-9-5.5z" />
               </svg>
             </a>
-            <a href="/atom.xml" title="RSS">
+            <a 
+              href="/atom.xml" 
+              title="RSS"
+              className="flex items-center justify-center text-secondary hover:text-primary transition-colors"
+            >
               <svg
-                className={styles.icon}
+                className="w-5 h-5"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
