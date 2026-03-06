@@ -1,0 +1,49 @@
+.container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  text-align: center;
+}
+
+.content h1 {
+  font-size: 80px;
+  margin: 0 0 16px;
+  color: #0070f3;
+}
+
+.content p {
+  font-size: 24px;
+  color: #666;
+  margin: 0 0 32px;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 32px;
+  background: #0070f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background: #0051cc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+}
+
+@media (max-width: 768px) {
+  .content h1 {
+    font-size: 48px;
+  }
+
+  .content p {
+    font-size: 18px;
+  }
+}
