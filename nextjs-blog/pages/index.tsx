@@ -1,14 +1,9 @@
+import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
+import { getAllPosts, BlogPostPreview } from '@/lib/hexo-reader'
 
-interface Post {
-  title: string
-  date: string
-  excerpt: string
-  slug: string
-}
-
-export default function Home({ posts }: { posts: Post[] }) {
+export default function Home({ posts }: { posts: BlogPostPreview[] }) {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
@@ -63,13 +58,13 @@ export default function Home({ posts }: { posts: Post[] }) {
   )
 }
 
-export async function getStaticProps() {
-  // 这里可以从 Hexo 生成的 JSON 或直接从文件系统读取
-  // 暂时返回空数组，后续会配置 Hexo 输出
-  const posts: Post[] = []
+export const getStaticProps: GetStaticProps = async () => {
+  const allPosts = await getAllPosts()
+  // 只显示最新的 5 篇文章
+  const posts = allPosts.slice(0, 5)
 
   return {
     props: { posts },
-    revalidate: 3600, // 每小时重新生成
+    revalidate: 60, // 每 60 秒重新生成
   }
 }

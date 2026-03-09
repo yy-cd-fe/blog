@@ -1,88 +1,66 @@
+import { GetStaticProps } from 'next'
 import Link from 'next/link'
-import styles from '../../styles/Blog.module.css'
+import { getAllPosts, BlogPostPreview } from '@/lib/hexo-reader'
+import Layout from '@/components/Layout'
+import styles from '@/styles/blog.module.css'
 
-interface Post {
-  title: string
-  date: string
-  excerpt: string
-  slug: string
-  categories?: string[]
-  tags?: string[]
+interface BlogPageProps {
+  posts: BlogPostPreview[]
 }
 
-export default function BlogList({ posts }: { posts: Post[] }) {
+export default function BlogPage({ posts }: BlogPageProps) {
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>所有文章</h1>
-        <p>共 {posts.length} 篇文章</p>
-      </div>
-
-      <div className={styles.layout}>
-        {/* 主要内容 */}
-        <main className={styles.main}>
-          {posts.length > 0 ? (
-            <div className={styles.postList}>
-              {posts.map((post) => (
-                <article key={post.slug} className={styles.postItem}>
-                  <div className={styles.postHeader}>
-                    <Link href={`/blog/${post.slug}`}>
-                      <h2>{post.title}</h2>
-                    </Link>
-                    <div className={styles.postMeta}>
-                      <span className={styles.date}>{post.date}</span>
-                      {post.categories && post.categories.length > 0 && (
-                        <span className={styles.categories}>
-                          {post.categories.map((cat) => (
-                            <Link key={cat} href={`/categories/${cat}`} className={styles.category}>
-                              {cat}
-                            </Link>
-                          ))}
-                        </span>
-                      )}
-                    </div>
+    <Layout>
+      <div className={styles.container}>
+        <h1 className={styles.title}>文章列表</h1>
+        
+        {posts.length === 0 ? (
+          <div className={styles.empty}>暂无文章</div>
+        ) : (
+          <div className={styles.postList}>
+            {posts.map(post => (
+              <Link href={`/blog/${post.slug}`} key={post.slug}>
+                <article className={styles.postItem}>
+                  <h2 className={styles.postTitle}>{post.title}</h2>
+                  <div className={styles.postMeta}>
+                    <span className={styles.date}>{post.date}</span>
+                    {post.categories.length > 0 && (
+                      <div className={styles.categories}>
+                        {post.categories.map(cat => (
+                          <span key={cat} className={styles.category}>
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <p className={styles.excerpt}>{post.excerpt}</p>
-                  {post.tags && post.tags.length > 0 && (
+                  {post.tags.length > 0 && (
                     <div className={styles.tags}>
-                      {post.tags.map((tag) => (
-                        <Link key={tag} href={`/tags/${tag}`} className={styles.tag}>
+                      {post.tags.map(tag => (
+                        <span key={tag} className={styles.tag}>
                           #{tag}
-                        </Link>
+                        </span>
                       ))}
                     </div>
                   )}
-                  <Link href={`/blog/${post.slug}`} className={styles.readMore}>
-                    继续阅读 →
-                  </Link>
                 </article>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.empty}>
-              <p>暂无文章</p>
-            </div>
-          )}
-        </main>
-
-        {/* 侧边栏 */}
-        <aside className={styles.sidebar}>
-          <div className={styles.widget}>
-            <h3>文章统计</h3>
-            <p>共有 <strong>{posts.length}</strong> 篇文章</p>
+              </Link>
+            ))}
           </div>
-        </aside>
+        )}
       </div>
-    </div>
+    </Layout>
   )
 }
 
-export async function getStaticProps() {
-  // 暂时返回空数组
-  const posts: Post[] = []
+export const getStaticProps: GetStaticProps<BlogPageProps> = async () => {
+  const posts = await getAllPosts()
 
   return {
-    props: { posts },
-    revalidate: 3600,
+    props: {
+      posts,
+    },
+    revalidate: 60, // 每 60 秒重新生成
   }
 }

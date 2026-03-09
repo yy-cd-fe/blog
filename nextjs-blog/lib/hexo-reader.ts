@@ -1,31 +1,68 @@
 import fs from 'fs'
 import path from 'path'
+import matter from 'gray-matter'
+import { remark } from 'remark'
+import remarkHtml from 'remark-html'
 
-/**
- * 从 Hexo 生成的 public 目录读取文章数据
- * 这是一个示例实现，实际使用时需要根据 Hexo 的输出格式调整
- */
-
-interface HexoPost {
+export interface BlogPost {
+  slug: string
   title: string
   date: string
   excerpt: string
-  slug: string
-  categories?: string[]
-  tags?: string[]
-  content?: string
+  content: string
+  html: string
+  tags: string[]
+  categories: string[]
+  author?: string
 }
 
-const HEXO_PUBLIC_PATH = path.join(process.cwd(), '..', 'public')
+export interface BlogPostPreview {
+  slug: string
+  title: string
+  date: string
+  excerpt: string
+  tags: string[]
+  categories: string[]
+}
+
+const postsDirectory = path.join(process.cwd(), '..', 'source', '_posts')
 
 /**
- * 获取所有文章列表
+ * 获取所有文章列表（用于首页和列表页）
  */
-export async function getAllPosts(): Promise<HexoPost[]> {
+export async function getAllPosts(): Promise<BlogPostPreview[]> {
   try {
-    // 这里是示例，实际实现需要根据 Hexo 的输出格式调整
-    // 可以读取 Hexo 生成的 JSON 文件或者遍历 HTML 文件
-    return []
+    if (!fs.existsSync(postsDirectory)) {
+      console.warn(`Posts directory not found: ${postsDirectory}`)
+      return []
+    }
+
+    const files = fs.readdirSync(postsDirectory).filter(file => file.endsWith('.md'))
+
+    const posts = files.map(file => {
+      const fullPath = path.join(postsDirectory, file)
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const { data, content } = matter(fileContents)
+
+      // 生成摘要（取前 200 个字符）
+      const excerpt = content
+        .replace(/^---[\s\S]*?---\s*/g, '') // 移除 front matter
+        .replace(/[#*`[\]()]/g, '')         // 移除 markdown 符号
+        .substring(0, 200)
+        .trim() + '...'
+
+      return {
+        slug: file.replace(/\.md$/, ''),
+        title: data.title || '无标题',
+        date: data.date ? new Date(data.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        excerpt,
+        tags: data.tags || [],
+        categories: data.categories || [],
+      }
+    })
+
+    // 按日期排序（最新的在前）
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   } catch (error) {
     console.error('Error reading posts:', error)
     return []
@@ -33,22 +70,42 @@ export async function getAllPosts(): Promise<HexoPost[]> {
 }
 
 /**
- * 获取单篇文章
+ * 获取单篇文章（包含 HTML 内容）
  */
-export async function getPostBySlug(slug: string): Promise<HexoPost | null> {
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const postPath = path.join(HEXO_PUBLIC_PATH, slug, 'index.html')
-    
-    if (!fs.existsSync(postPath)) {
+    const fullPath = path.join(postsDirectory, `${slug}.md`)
+
+    if (!fs.existsSync(fullPath)) {
       return null
     }
 
-    // 这里需要解析 HTML 并提取内容
-    // 可以使用 cheerio 或其他 HTML 解析库
-    
-    return null
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data, content } = matter(fileContents)
+
+    // 将 Markdown 转换为 HTML
+    const processedContent = await remark().use(remarkHtml).process(content)
+    const html = processedContent.toString()
+
+    // 生成摘要
+    const excerpt = content
+      .replace(/[#*`[\]()]/g, '')
+      .substring(0, 200)
+      .trim() + '...'
+
+    return {
+      slug,
+      title: data.title || '无标题',
+      date: data.date ? new Date(data.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      excerpt,
+      content,
+      html,
+      tags: data.tags || [],
+      categories: data.categories || [],
+      author: data.author || '匿名',
+    }
   } catch (error) {
-    console.error('Error reading post:', error)
+    console.error(`Error reading post ${slug}:`, error)
     return null
   }
 }
@@ -58,7 +115,14 @@ export async function getPostBySlug(slug: string): Promise<HexoPost | null> {
  */
 export async function getAllCategories(): Promise<string[]> {
   try {
-    return []
+    const posts = await getAllPosts()
+    const categories = new Set<string>()
+
+    posts.forEach(post => {
+      post.categories.forEach(cat => categories.add(cat))
+    })
+
+    return Array.from(categories).sort()
   } catch (error) {
     console.error('Error reading categories:', error)
     return []
@@ -70,7 +134,14 @@ export async function getAllCategories(): Promise<string[]> {
  */
 export async function getAllTags(): Promise<string[]> {
   try {
-    return []
+    const posts = await getAllPosts()
+    const tags = new Set<string>()
+
+    posts.forEach(post => {
+      post.tags.forEach(tag => tags.add(tag))
+    })
+
+    return Array.from(tags).sort()
   } catch (error) {
     console.error('Error reading tags:', error)
     return []
@@ -80,11 +151,12 @@ export async function getAllTags(): Promise<string[]> {
 /**
  * 按分类获取文章
  */
-export async function getPostsByCategory(category: string): Promise<HexoPost[]> {
+export async function getPostsByCategory(category: string): Promise<BlogPostPreview[]> {
   try {
-    return []
+    const posts = await getAllPosts()
+    return posts.filter(post => post.categories.includes(category))
   } catch (error) {
-    console.error('Error reading posts by category:', error)
+    console.error(`Error reading posts by category ${category}:`, error)
     return []
   }
 }
@@ -92,11 +164,29 @@ export async function getPostsByCategory(category: string): Promise<HexoPost[]> 
 /**
  * 按标签获取文章
  */
-export async function getPostsByTag(tag: string): Promise<HexoPost[]> {
+export async function getPostsByTag(tag: string): Promise<BlogPostPreview[]> {
   try {
-    return []
+    const posts = await getAllPosts()
+    return posts.filter(post => post.tags.includes(tag))
   } catch (error) {
-    console.error('Error reading posts by tag:', error)
+    console.error(`Error reading posts by tag ${tag}:`, error)
+    return []
+  }
+}
+
+/**
+ * 获取所有可用的动态路由参数（用于 getStaticPaths）
+ */
+export async function getAllPostSlugs(): Promise<string[]> {
+  try {
+    if (!fs.existsSync(postsDirectory)) {
+      return []
+    }
+
+    const files = fs.readdirSync(postsDirectory).filter(file => file.endsWith('.md'))
+    return files.map(file => file.replace(/\.md$/, ''))
+  } catch (error) {
+    console.error('Error reading post slugs:', error)
     return []
   }
 }

@@ -33,10 +33,10 @@ npm run build
 hexo generate
 ```
 
-### 2. 启动 Next.js 开发服务器
+### 2. 启动 Next.js 开发服务器·
 
 ```bash
-# 进入 Next.js 项目
+# 进入 Next.js 项目·
 cd nextjs-blog
 
 # 安装依赖（如果还没有）
