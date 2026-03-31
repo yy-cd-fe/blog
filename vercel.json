@@ -1,7 +1,0 @@
-{
-  "buildCommand": "cd nextjs-blog && npm run build",
-  "devCommand": "cd nextjs-blog && npm run dev",
-  "installCommand": "cd nextjs-blog && npm install",
-  "framework": "nextjs",
-  "outputDirectory": "nextjs-blog/.next"
-}
