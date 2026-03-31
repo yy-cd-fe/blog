@@ -3,6 +3,7 @@ Thumbs.db
 db.json
 *.log
 node_modules/
+nextjs-blog/node_modules/
 public/
 .deploy*/
 _multiconfig.yml
@@ -11,9 +12,6 @@ _multiconfig.yml
 nextjs-blog/.next/
 nextjs-blog/out/
 nextjs-blog/.env*.local
-
-# 依赖
-nextjs-blog/node_modules/
 
 # 调试
 npm-debug.log*
