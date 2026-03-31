@@ -1,7 +1,7 @@
-import { GetStaticProps } from 'next'
-import Link from 'next/link'
-import styles from '../styles/Home.module.css'
-import { getAllPosts, BlogPostPreview } from '@/lib/hexo-reader'
+import { GetStaticProps } from "next";
+import Link from "next/link";
+import styles from "../styles/Home.module.css";
+import { getAllPosts, BlogPostPreview } from "@/lib/hexo-reader";
 
 export default function Home({ posts }: { posts: BlogPostPreview[] }) {
   return (
@@ -55,16 +55,16 @@ export default function Home({ posts }: { posts: BlogPostPreview[] }) {
         </div>
       </section>
     </div>
-  )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const allPosts = await getAllPosts()
+  const allPosts = await getAllPosts();
   // 只显示最新的 5 篇文章
-  const posts = allPosts.slice(0, 5)
+  const posts = allPosts.slice(0, 5);
 
   return {
     props: { posts },
-    revalidate: 60, // 每 60 秒重新生成
-  }
-}
+    revalidate: 10, // 每 60 秒重新生成
+  };
+};

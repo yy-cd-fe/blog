@@ -18,17 +18,17 @@ const nextConfig = {
     return config;
   },
   
-  // 重写配置，将 Hexo 生成的内容映射到 /blog
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/blog/:path*',
-          destination: '/:path*',
-        },
-      ],
-    };
-  },
+  // 注释掉旧的 Hexo 重写规则,现在使用 Next.js 动态路由
+  // async rewrites() {
+  //   return {
+  //     beforeFiles: [
+  //       {
+  //         source: '/blog/:path*',
+  //         destination: '/:path*',
+  //       },
+  //     ],
+  //   };
+  // },
 };
 
 module.exports = nextConfig;

@@ -6,3 +6,19 @@ node_modules/
 public/
 .deploy*/
 _multiconfig.yml
+
+# Next.js
+nextjs-blog/.next/
+nextjs-blog/out/
+nextjs-blog/.env*.local
+
+# 依赖
+nextjs-blog/node_modules/
+
+# 调试
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
