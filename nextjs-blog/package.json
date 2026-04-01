@@ -2,6 +2,10 @@
   "name": "nextjs-blog",
   "version": "1.0.0",
   "description": "Hexo + Next.js 混合博客平台",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
