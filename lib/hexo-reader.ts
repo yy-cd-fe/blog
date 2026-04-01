@@ -25,7 +25,7 @@ export interface BlogPostPreview {
   categories: string[];
 }
 
-const postsDirectory = path.join(process.cwd(), "..", "source", "_posts");
+const postsDirectory = path.join(process.cwd(), "posts");
 
 /**
  * 获取所有文章列表（用于首页和列表页）

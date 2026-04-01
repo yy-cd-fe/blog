@@ -1,31 +1,37 @@
 {
-  "name": "hexo-nextjs-blog",
+  "name": "nextjs-blog",
   "version": "1.0.0",
-  "private": true,
-  "description": "Hexo + Next.js 混合博客系统",
-  "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server",
-    "dev:hexo": "hexo server",
-    "dev:nextjs": "cd nextjs-blog && npm run dev",
-    "build:all": "npm run build && cd nextjs-blog && npm run build",
-    "start:nextjs": "cd nextjs-blog && npm run start"
+  "description": "Hexo + Next.js 混合博客平台",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
-  "hexo": {
-    "version": "8.1.1"
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "hexo:generate": "cd ../.. && npm run build",
+    "hexo:clean": "cd ../.. && npm run clean"
   },
   "dependencies": {
-    "hexo": "^8.0.0",
-    "hexo-generator-archive": "^2.0.0",
-    "hexo-generator-category": "^2.0.0",
-    "hexo-generator-index": "^4.0.0",
-    "hexo-generator-tag": "^2.0.0",
-    "hexo-renderer-ejs": "^2.0.0",
-    "hexo-renderer-marked": "^7.0.0",
-    "hexo-renderer-stylus": "^3.0.1",
-    "hexo-server": "^3.0.0",
-    "hexo-theme-landscape": "^1.0.0"
+    "axios": "^1.6.0",
+    "gray-matter": "^4.0.3",
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "remark": "^14.0.3",
+    "remark-html": "^15.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.0.0"
   }
 }
