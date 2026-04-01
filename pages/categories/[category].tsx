@@ -1,8 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Link from 'next/link'
 import { getAllCategories, getPostsByCategory, BlogPostPreview } from '@/lib/hexo-reader'
-import Layout from '@/components/Layout'
-import styles from '@/styles/blog.module.css'
+import styles from '@/styles/Blog.module.css'
 
 interface CategoryPageProps {
   category: string
@@ -11,8 +10,7 @@ interface CategoryPageProps {
 
 export default function CategoryPage({ category, posts }: CategoryPageProps) {
   return (
-    <Layout>
-      <div className={styles.container}>
+    <div className={styles.container}>
         <h1 className={styles.title}>分类: {category}</h1>
         
         {posts.length === 0 ? (
