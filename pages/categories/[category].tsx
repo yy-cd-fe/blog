@@ -42,7 +42,6 @@ export default function CategoryPage({ category, posts }: CategoryPageProps) {
           </div>
         )}
       </div>
-    </Layout>
   )
 }
 

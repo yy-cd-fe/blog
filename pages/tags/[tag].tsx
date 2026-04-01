@@ -1,8 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Link from 'next/link'
 import { getAllTags, getPostsByTag, BlogPostPreview } from '@/lib/hexo-reader'
-import Layout from '@/components/Layout'
-import styles from '@/styles/blog.module.css'
+import styles from '@/styles/Blog.module.css'
 
 interface TagPageProps {
   tag: string
@@ -11,8 +10,7 @@ interface TagPageProps {
 
 export default function TagPage({ tag, posts }: TagPageProps) {
   return (
-    <Layout>
-      <div className={styles.container}>
+    <div className={styles.container}>
         <h1 className={styles.title}>标签: #{tag}</h1>
         
         {posts.length === 0 ? (
@@ -42,7 +40,6 @@ export default function TagPage({ tag, posts }: TagPageProps) {
           </div>
         )}
       </div>
-    </Layout>
   )
 }
 

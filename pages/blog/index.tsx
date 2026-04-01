@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { getAllPosts, BlogPostPreview } from '@/lib/hexo-reader'
-import styles from '@/styles/blog.module.css'
+import styles from '@/styles/Blog.module.css'
 
 interface BlogPageProps {
   posts: BlogPostPreview[]
